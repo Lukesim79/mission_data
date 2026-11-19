@@ -1,0 +1,995 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사업계획서</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --card:#fff; --ink:#1b2330; --mute:#6b7585; --line:#dde1e8;
+    --accent:#1f4fd8; --accent-soft:#e8eefc; --danger:#c0392b; --neg:#c62828;
+    --ok-bg:#d8f1e0; --ok-ink:#14612f; --no-bg:#fbdcd8; --no-ink:#a1291b; --warn-bg:#fff4d6;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#12161c; --card:#1a2029; --ink:#e8ecf2; --mute:#95a0b1; --line:#2b3441; --accent:#6d93ff; --accent-soft:#232d49; --danger:#ff7b6b; --neg:#ff6b60;
+      --ok-bg:#17402a; --ok-ink:#7fdca0; --no-bg:#4a1f1b; --no-ink:#ff9a8d; --warn-bg:#3a3217}
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 -apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:24px 16px 64px}
+  h1{font-size:20px;margin:0 0 4px}
+  .sub{color:var(--mute);margin:0 0 20px;font-size:13px}
+  .presets{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+  .presets .lbl{color:var(--mute);font-size:13px;margin-right:4px}
+  button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:7px 14px}
+  button:hover{border-color:var(--accent);color:var(--accent)}
+  .presets button{background:var(--accent-soft);border-color:transparent;color:var(--accent);font-weight:600}
+  section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
+  h2{font-size:15px;margin:0 0 14px}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media (max-width:600px){.grid,.grid3{grid-template-columns:1fr}}
+  label{display:block;font-size:13px;color:var(--mute)}
+  label span.u{color:var(--mute);font-weight:400}
+  input{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-top:4px}
+  input:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:transparent}
+  input[type=number]{text-align:right}
+  .tbl{overflow-x:auto}
+  table{width:100%;border-collapse:collapse}
+  .form-table{min-width:520px}
+  .form-table th{font-size:12px;color:var(--mute);font-weight:600;text-align:right;padding:0 6px 6px}
+  .form-table th:first-child{text-align:left}
+  .form-table td{padding:3px 4px}
+  .form-table td input{margin:0}
+  td.x{width:36px;text-align:center}
+  .del{padding:4px 9px;color:var(--danger);border-color:transparent;background:transparent}
+  .form-table tfoot td{padding:10px 8px 2px;font-weight:700;text-align:right;border-top:1px solid var(--line)}
+  .form-table tfoot td:first-child{text-align:left}
+  .add{margin-top:10px}
+  .group-title{font-size:12px;color:var(--mute);margin:16px 0 8px;font-weight:600}
+
+  /* ───── 사업계획서 (결과) ───── */
+  .report-head{margin:32px 0 14px}
+  .report-head h1{font-size:24px}
+  .report-head .meta{color:var(--mute);font-size:13px}
+  .ch h2{font-size:17px;display:flex;align-items:center;gap:10px;margin:0 0 14px;padding-bottom:10px;border-bottom:2px solid var(--ink)}
+  .ch h2 .no{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--card);font-size:13px}
+  .nodata{color:var(--mute);background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:10px 14px;margin:0}
+  span.nodata{display:inline;padding:1px 8px;font-size:13px}
+  .neg{color:var(--neg)}
+  .num{font-variant-numeric:tabular-nums}
+  .kv{display:grid;grid-template-columns:11em 9em 1fr;gap:2px 14px;align-items:baseline;padding:8px 0;border-top:1px solid var(--line)}
+  .kv:first-of-type{border-top:0}
+  .kv .k{color:var(--mute);font-size:13px}
+  .kv .v{font-weight:700;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .kv .f{font-size:12px;color:var(--mute);line-height:1.5}
+  .kv.tot{background:var(--accent-soft);margin:4px -10px 0;padding:10px;border-radius:8px;border-top:0}
+  .kv.tot .k{color:var(--ink);font-weight:700}
+  .kv.tot .v{font-size:18px}
+  .badge{display:inline-block;padding:2px 10px;border-radius:99px;font-size:13px;font-weight:700}
+  .badge.ok{background:var(--ok-bg);color:var(--ok-ink)}
+  .badge.no{background:var(--no-bg);color:var(--no-ink)}
+  .rep-table th,.rep-table td{padding:6px 8px;text-align:right;border-top:1px solid var(--line);font-variant-numeric:tabular-nums}
+  .rep-table th{font-size:12px;color:var(--mute);font-weight:600;border-top:0}
+  .rep-table th:first-child,.rep-table td:first-child{text-align:left}
+  .rep-table tfoot td{font-weight:700}
+  .sens{min-width:560px}
+  .sens th{text-align:center;padding:6px 4px}
+  .sens td{text-align:center;padding:7px 4px;border:2px solid var(--card);border-radius:6px}
+  .sens td.ok{background:var(--ok-bg);color:var(--ok-ink)}
+  .sens td.no{background:var(--no-bg);color:var(--no-ink)}
+  .sens td.ok .neg,.sens td.no .neg{color:var(--neg)}
+  .sens td.rh{background:none;color:var(--mute);font-weight:600;font-size:12px}
+  .sens td.plan{outline:2px solid var(--ink);outline-offset:-2px}
+  .note{font-size:12px;color:var(--mute);margin:10px 0 0}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin:0 4px 0 8px;vertical-align:-1px}
+  .dot.ok{background:#3aa766}.dot.no{background:#d9564a}
+  .verdict{font-size:16px;font-weight:700;margin:12px 0 0}
+  .risk{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:10px}
+  .risk h3{font-size:14px;margin:0 0 6px}
+  .risk p{margin:4px 0;font-size:14px}
+  .risk .lbl{display:inline-block;min-width:4.5em;color:var(--mute);font-size:12px;font-weight:700}
+  .risk .warn{background:var(--warn-bg);border-radius:6px;padding:2px 8px}
+  ul.todo{margin:0;padding-left:20px}
+  ul.todo li{margin:4px 0}
+  .sub-h{font-size:13px;font-weight:700;margin:18px 0 6px}
+  .meta-line{font-size:12px;color:var(--mute);margin:4px 0 8px;line-height:1.6}
+  .meta-line b{color:var(--ink);font-weight:600}
+  .progress{background:var(--accent-soft);border-radius:8px;padding:8px 12px;font-size:13px;margin:0 0 10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .mini-btn{padding:2px 10px;font-size:12px;border-radius:6px;color:var(--accent);border-color:var(--accent);background:transparent}
+  .err{color:var(--neg);font-size:12px}
+  .cands{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .cands button{font-size:13px;padding:4px 10px}
+  .warnbox{background:var(--warn-bg);border-radius:8px;padding:8px 12px;font-size:13px;margin:6px 0}
+  .conc{border-left:4px solid var(--accent);background:var(--accent-soft);padding:8px 12px;border-radius:0 8px 8px 0;margin-top:14px;font-size:14px}
+  .print-only{display:none}
+  .rep-table.wide{min-width:560px}
+  .rep-table td.l,.rep-table th.l{text-align:left}
+  .rep-table.txt th,.rep-table.txt td{text-align:left;vertical-align:top}
+  code{font-size:.9em;background:var(--accent-soft);padding:0 4px;border-radius:4px}
+
+  @media (max-width:640px){
+    .kv{grid-template-columns:1fr;gap:0}
+    .kv .v{text-align:left}
+    .kv.tot{margin:4px 0 0}
+  }
+
+  /* ───── 인쇄: A4 문서 ───── */
+  @media print{
+    :root{--bg:#fff; --card:#fff; --ink:#000; --mute:#444; --line:#bbb; --accent-soft:#eef1f8; --neg:#c00000;
+      --ok-bg:#d8f1e0; --ok-ink:#14612f; --no-bg:#fbdcd8; --no-ink:#a1291b; --warn-bg:#fff4d6}
+    @page{size:A4;margin:16mm 14mm}
+    body{font-size:10.5pt;line-height:1.5;background:#fff;color:#000;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .screen-only{display:none!important}
+    .print-only{display:inline}
+    .rep-table.wide{min-width:0;font-size:9pt}
+    .wrap{max-width:none;padding:0}
+    .report-head{margin:0 0 10pt}
+    section.ch{border:0;border-radius:0;padding:0;margin:0 0 14pt;background:none;break-inside:avoid}
+    .ch h2{break-after:avoid}
+    .risk,.kv,.rep-table tr{break-inside:avoid}
+    .tbl{overflow:visible}
+    .sens{min-width:0;font-size:9pt}
+    .kv{grid-template-columns:30mm 28mm 1fr}
+    .kv .v{text-align:right}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="screen-only">
+    <h1>사업계획서 입력</h1>
+    <p class="sub">시행사 · 대주단 제출용 · 입력값으로 계산합니다. 아래 입력을 바꾸면 사업계획서가 즉시 갱신됩니다.</p>
+
+    <div class="presets">
+      <span class="lbl">임시 값</span>
+      <button type="button" data-p="Z">청라 레이크포레</button>
+      <button type="button" data-p="A">A 해운대</button>
+      <button type="button" data-p="B">B 영통</button>
+      <button type="button" data-p="C">C 유성</button>
+      <button type="button" id="clearAll">비우기</button>
+      <button type="button" id="printBtn" style="margin-left:auto">인쇄 / PDF</button>
+    </div>
+
+    <form id="f" onsubmit="return false" autocomplete="off">
+      <section>
+        <h2>사업 개요</h2>
+        <div class="grid">
+          <label>사업명<input id="name" type="text" placeholder="예: 해운대 그린테라스"></label>
+          <label>사업대상지<input id="site" type="text" placeholder="예: 부산광역시 해운대구"></label>
+        </div>
+      </section>
+
+      <section>
+        <h2>주택형</h2>
+        <div class="tbl">
+          <table class="form-table">
+            <thead><tr>
+              <th>이름</th><th>전용 (㎡)</th><th>공급 (평)</th><th>세대수</th><th></th>
+            </tr></thead>
+            <tbody id="rows"></tbody>
+            <tfoot><tr>
+              <td>합계</td><td></td>
+              <td><span id="totArea">0</span> 평</td>
+              <td><span id="totUnits">0</span> 세대</td><td></td>
+            </tr></tfoot>
+          </table>
+        </div>
+        <button type="button" class="add" id="addRow">+ 주택형 추가</button>
+      </section>
+
+      <section>
+        <h2>분양·사업비</h2>
+        <div class="grid3">
+          <label>평당가 · 적용 <span class="u">(만원, 아파트 공급면적 가중평균)</span><input id="price" type="number" step="any" min="0"></label>
+          <label>평당가 · 희망 <span class="u">(만원, 사업팀 희망가 가중평균)</span><input id="hope" type="number" step="any" min="0"></label>
+          <label>적용 분양률 <span class="u">(%, 비우면 100%)</span><input id="rate" type="number" step="any" min="0" max="100"></label>
+          <label>상가 <span class="u">(억원)</span><input id="retail" type="number" step="any" min="0"></label>
+          <label>기타유입 <span class="u">(억원)</span><input id="other" type="number" step="any" min="0"></label>
+          <label>고정비 <span class="u">(억원)</span><input id="fixed" type="number" step="any" min="0"></label>
+        </div>
+        <div class="group-title">조달</div>
+        <div class="grid3">
+          <label>본PF <span class="u">(억원)</span><input id="pf" type="number" step="any" min="0"></label>
+          <label>본PF 금융비용 <span class="u">(억원)</span><input id="pfCost" type="number" step="any" min="0"></label>
+          <label>후순위 <span class="u">(억원)</span><input id="sub" type="number" step="any" min="0"></label>
+        </div>
+      </section>
+    </form>
+  </div>
+
+  <div class="report-head">
+    <h1 id="docTitle">사업계획서</h1>
+    <div class="meta" id="docMeta"></div>
+  </div>
+  <div id="report"></div>
+</div>
+
+<script src="calc.js"></script>
+<script src="market.js"></script>
+<script src="cheongna.js"></script>
+<script>
+const PRESETS = {
+  Z: Cheongna.preset(), // 청라 레이크포레: 02·03·01·07 원자료에서 산출한 입력값 (cheongna.js)
+  A:{name:"해운대 그린테라스",site:"부산광역시 해운대구",
+     types:[["59형",59.9,25.6,200],["84형",84.9,34.6,320]],
+     price:2420,retail:150,other:175,fixed:3815.0,pf:2450,pfCost:480,sub:400},
+  B:{name:"영통 센트럴파크",site:"경기도 수원시 영통구",
+     types:[["59형",59.8,25.4,300],["84형",84.9,34.3,480]],
+     price:2650,retail:180,other:260,fixed:6296.4,pf:4100,pfCost:820,sub:600},
+  C:{name:"유성 리버뷰",site:"대전광역시 유성구",
+     types:[["74형",74.6,30.8,140],["84형",84.9,34.5,240]],
+     price:1980,retail:90,other:120,fixed:2461.2,pf:1650,pfCost:330,sub:260}
+};
+const FIELDS = ["price","hope","rate","retail","other","fixed","pf","pfCost","sub"];
+let RATE = 1; // 적용 분양률 (입력칸 '적용 분양률 %'에서 읽음, 비우면 100%) — render()가 매번 갱신
+let AUTO_RUN = false; // 첫 화면(청라)에서는 공공데이터를 자동으로 불러온다 (하루 캐시)
+const isCheongna = () => $("name").value.includes("레이크포레");
+const $ = id => document.getElementById(id);
+const rows = $("rows");
+
+/* ───── 입력 폼 ───── */
+function addRow(v=["",,,]){
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td><input type="text" class="n" placeholder="예: 84형"></td>
+    <td><input type="number" class="m" step="any" min="0"></td>
+    <td><input type="number" class="p" step="any" min="0"></td>
+    <td><input type="number" class="u" step="1" min="0"></td>
+    <td class="x"><button type="button" class="del" title="행 삭제">✕</button></td>`;
+  const [n,m,p,u] = tr.querySelectorAll("input");
+  n.value = v[0] ?? ""; m.value = v[1] ?? ""; p.value = v[2] ?? ""; u.value = v[3] ?? "";
+  tr.querySelector(".del").onclick = () => { tr.remove(); totals(); };
+  rows.appendChild(tr);
+  totals();
+}
+
+/* 입력 폼의 합계 표시 후 사업계획서 갱신 */
+function totals(){
+  const t = readTypes();
+  $("totArea").textContent = fmt(Calc.totalArea(t),1);
+  $("totUnits").textContent = fmt(Calc.totalUnits(t),0);
+  render();
+}
+
+function fill(k){
+  const d = PRESETS[k];
+  $("name").value = d.name; $("site").value = d.site;
+  rows.innerHTML = "";
+  d.types.forEach(addRow);
+  for(const f of FIELDS) $(f).value = d[f] ?? "";
+  totals();
+  scheduleRegion();
+}
+function clearAll(){
+  $("name").value = ""; $("site").value = "";
+  rows.innerHTML = ""; addRow(); addRow();
+  for(const f of FIELDS) $(f).value = "";
+  totals();
+  scheduleRegion();
+}
+
+/* ───── 서식 도우미 ───── */
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt = (x, d=0) => x == null ? "-" : x.toLocaleString("ko-KR",{minimumFractionDigits:d,maximumFractionDigits:d});
+/* 숫자 → HTML. 천단위 콤마, 음수는 빨강. sign=true면 양수에 + 표시 */
+function N(x, d=0, unit="", sign=false){
+  if (x == null || !isFinite(x)) return `<span class="nodata">자료 없음</span>`;
+  const r = Number(x.toFixed(d));
+  const txt = (sign && r > 0 ? "+" : "") + fmt(r, d) + unit;
+  return `<span class="num${r < 0 ? " neg" : ""}">${txt}</span>`;
+}
+const P = (x, d=1, sign=false) => x == null ? N(null) : N(x*100, d, "%", sign);
+const NODATA = `<p class="nodata">자료 없음</p>`;
+const kv = (k, v, f="", cls="") => `<div class="kv ${cls}"><div class="k">${k}</div><div class="v">${v}</div><div class="f">${f}</div></div>`;
+
+/* ───── 입력 읽기 ───── */
+const val = id => parseFloat($(id).value);
+const blank = id => $(id).value.trim() === "" || isNaN(val(id));
+const num = id => blank(id) ? 0 : val(id);
+function readTypes(){
+  return [...rows.querySelectorAll("tr")].map(tr => ({
+    name: tr.querySelector(".n").value.trim(),
+    sqm: parseFloat(tr.querySelector(".m").value) || 0,
+    pyeong: parseFloat(tr.querySelector(".p").value) || 0,
+    units: parseFloat(tr.querySelector(".u").value) || 0,
+  }));
+}
+function readInput(){
+  const input = {types: readTypes()};
+  for(const f of FIELDS) input[f] = num(f);
+  return input;
+}
+
+/* 미입력 항목 표시: 값이 비어 있으면 '미입력(0으로 계산)'을 함께 알린다 */
+const valOrBlank = (id, d, unit, sign) => blank(id) ? `<span class="nodata">미입력</span>` : N(num(id), d, unit, sign);
+
+/* ───── 장별 렌더링 ───── */
+function ch(no, title, body){
+  return `<section class="ch"><h2><span class="no">${no}</span>${title}</h2>${body}</section>`;
+}
+
+/* 1장 사업 개요 */
+function ch1(input){
+  const name = $("name").value.trim(), site = $("site").value.trim();
+  const t = input.types.filter(x => x.pyeong || x.units || x.sqm || x.name);
+  const nd = `<span class="nodata">자료 없음</span>`;
+  let body = kv("사업명", name ? esc(name) : nd) + kv("사업대상지", site ? esc(site) : nd) + regionKv(site);
+  if (!t.length) return ch(1, "사업 개요", body + `<div class="sub-h">주택형</div>` + NODATA);
+  const area = Calc.totalArea(input.types), units = Calc.totalUnits(input.types);
+  body += `<div class="sub-h">주택형 구성</div><div class="tbl"><table class="rep-table"><thead><tr>
+    <th>주택형</th><th>전용 (㎡)</th><th>공급 (평)</th><th>세대수</th><th>공급면적 (평)<br>공급평 × 세대수</th></tr></thead><tbody>` +
+    t.map(x => `<tr><td>${x.name ? esc(x.name) : "-"}</td><td>${x.sqm ? N(x.sqm,1) : "-"}</td><td>${x.pyeong ? N(x.pyeong,1) : "-"}</td>
+      <td>${N(x.units,0)}</td><td>${N(x.pyeong*x.units,1)}</td></tr>`).join("") +
+    `</tbody><tfoot><tr><td>합계</td><td></td><td></td><td>${N(units,0)}</td><td>${N(area,1)}</td></tr></tfoot></table></div>`;
+  return ch(1, "사업 개요", body);
+}
+
+/* ───── 공공데이터 (서버 경유) 상태 ─────
+ * 브라우저는 지역 '이름'만 서버로 보낸다. 지역코드·인증키는 서버가 다루고, 서버가 코드를 다시 확인한다. */
+const MK = { region: { state: "idle" }, run: null };
+let regionSeq = 0, regionTimer = null;
+const api = path => fetch(path).then(r => r.json());
+const enc = encodeURIComponent;
+
+/* 지역 확인: 입력 후 잠시 기다렸다가 서버에 이름을 보낸다 */
+function scheduleRegion(){
+  clearTimeout(regionTimer);
+  const name = $("site").value.trim();
+  regionSeq++;
+  if (!name) { MK.region = { state: "idle" }; MK.run = null; render(); return; }
+  MK.region = { state: "wait", name }; render();
+  regionTimer = setTimeout(checkRegion, 500);
+}
+async function checkRegion(){
+  const name = $("site").value.trim();
+  if (!name) return;
+  const seq = ++regionSeq;
+  MK.region = { state: "loading", name }; render();
+  let j;
+  try { j = await api("/api/region?name=" + enc(name)); }
+  catch { j = { status: "offline" }; }
+  if (seq !== regionSeq) return; // 그 사이 입력이 바뀜
+  MK.region = { ...j, state: j.status, name };
+  if (MK.run && (j.status !== "ok" || MK.run.name !== j.name)) MK.run = null; // 지역이 바뀌면 받은 자료를 버림
+  render();
+  if (AUTO_RUN && j.status === "ok" && !MK.run) { AUTO_RUN = false; startRun(); }
+}
+
+/* 1장의 '확인된 지역' 줄 */
+function regionKv(site){
+  const r = MK.region;
+  if (!site || r.state === "idle") return "";
+  const msg = t => kv("지역 확인", `<span class="nodata">${t}</span>`);
+  switch (r.state) {
+    case "wait": case "loading": return msg("확인 중…");
+    case "ok": return kv("확인된 지역", esc(r.name), `시군구 법정동코드 <b>${esc(r.code)}</b> (5자리) · 행정안전부 법정동코드`);
+    case "candidates": return kv("지역 확인", `<span class="nodata">후보 ${r.total}곳</span>`,
+      `이름이 정확히 하나로 맞지 않아 통과하지 않았습니다. 후보를 선택하세요.` +
+      `<div class="cands screen-only">${r.candidates.map(c => `<button type="button" data-cand="${esc(c.name)}">${esc(c.name)} (${esc(c.code)})</button>`).join("")}</div>` +
+      `<span class="print-only">${r.candidates.map(c => esc(c.name) + " (" + esc(c.code) + ")").join(" · ")}</span>`);
+    case "offline": return msg("서버에 연결하지 못해 확인하지 못했습니다 (npm start로 실행)");
+    default: return msg(esc(r.message || "확인하지 못했습니다"));
+  }
+}
+
+/* 조회일: 받아온 시각 중 가장 늦은 날짜 */
+const dateOf = list => {
+  const d = list.filter(Boolean).sort().pop();
+  return d ? new Date(d).toLocaleDateString("sv") : "-";
+};
+const metaLine = (region, count, excl, date) =>
+  `<p class="meta-line"><b>지역</b> ${esc(region.name)}(${esc(region.code)}) · <b>건수</b> ${count} · <b>제외 기준</b> ${excl} · <b>조회일</b> ${date}</p>`;
+
+/* ───── 공공데이터 불러오기 ───── */
+const okOf = o => Object.entries(o).filter(([, v]) => v.s === "ok").map(([k, v]) => v);
+
+function startRun(){
+  const r = MK.region;
+  if (r.state !== "ok") return;
+  const months = Market.months12(new Date());
+  const run = { name: r.name, code: r.code, months, silv: {}, rent: {}, list: { s: "idle" }, cx: {} };
+  months.forEach(ym => { run.silv[ym] = { s: "pending" }; run.rent[ym] = { s: "pending" }; });
+  MK.run = run; render();
+  // 분양권 · 전월세 · 청약홈을 동시에, 각각은 한 번에 하나씩 순서대로
+  const seq = kind => months.reduce((p, ym) => p.then(() => loadMonth(run, kind, ym)), Promise.resolve());
+  seq("silv"); seq("rent"); loadApply(run);
+}
+
+async function loadMonth(run, kind, ym){
+  if (run !== MK.run) return;
+  const slot = run[kind][ym];
+  if (slot.s === "ok") return;
+  run[kind][ym] = { s: "loading" }; render();
+  let res;
+  try {
+    const j = await api(`/api/trades?name=${enc(run.name)}&kind=${kind}&ym=${ym}`);
+    res = j.status === "ok" ? { s: "ok", data: j.data, fetchedAt: j.fetchedAt }
+      : { s: "err", err: j.status === "region" ? "지역이 확인되지 않았습니다" : j.message || "조회 실패" };
+  } catch { res = { s: "err", err: "서버에 연결하지 못했습니다" }; }
+  if (run !== MK.run) return;
+  run[kind][ym] = res; render();
+}
+
+async function loadApply(run){
+  run.list = { s: "loading" }; render();
+  try {
+    const j = await api(`/api/apply/list?name=${enc(run.name)}`);
+    if (run !== MK.run) return;
+    if (j.status !== "ok") throw new Error(j.status === "region" ? "지역이 확인되지 않았습니다" : j.message);
+    run.list = { s: "ok", complexes: j.complexes, fetchedAt: j.fetchedAt };
+    j.complexes.forEach(c => { run.cx[c.id + "|" + c.pblanc] = { s: "pending", info: c }; });
+    render();
+    for (const c of j.complexes) await loadComplex(run, c);
+  } catch (e) {
+    if (run !== MK.run) return;
+    run.list = { s: "err", err: e.message || "서버에 연결하지 못했습니다" }; render();
+  }
+}
+
+async function loadComplex(run, c){
+  if (run !== MK.run) return;
+  const k = c.id + "|" + c.pblanc;
+  run.cx[k] = { s: "loading", info: c }; render();
+  let res;
+  try {
+    const j = await api(`/api/apply/complex?name=${enc(run.name)}&id=${enc(c.id)}&pblanc=${enc(c.pblanc)}`);
+    res = j.status === "ok" ? { s: "ok", info: c, detail: j.detail, fetchedAt: j.fetchedAt } : { s: "err", info: c, err: j.message || "조회 실패" };
+  } catch { res = { s: "err", info: c, err: "서버에 연결하지 못했습니다" }; }
+  if (run !== MK.run) return;
+  run.cx[k] = res; render();
+}
+
+/* 불러온 단지 (info + detail) */
+const loadedComplexes = run => Object.values(run.cx).filter(v => v.s === "ok");
+
+/* 월별 표 칸: 상태에 따라 숫자·대기·오류(다시 시도) */
+function monthCell(run, kind, ym, pick){
+  const s = run[kind][ym];
+  if (s.s === "ok") return N(pick(s.data), 0);
+  if (s.s === "loading") return `<span class="nodata">불러오는 중</span>`;
+  if (s.s === "err") return `<span class="err">${esc(s.err)}</span> <button type="button" class="mini-btn screen-only" data-retry="${kind}|${ym}">다시 시도</button>`;
+  return `<span class="nodata">대기</span>`;
+}
+
+/* 우리 계획 대비 한계 평당가(상환 한계, 분양률 100%) */
+function repayLimitPrice(input){
+  return hasRevenue(input) ? Calc.limits(input).repay.priceAtFull : null;
+}
+
+/* 기준일: 오늘 기준 3년 전 (청약홈 신규 분양가·미달 판정에 쓰는 기간. 목록은 5년치를 받아 웃돈 매칭에 쓴다) */
+const SINCE3 = (() => { const d = new Date(); d.setFullYear(d.getFullYear() - 3); return d.toLocaleDateString("sv"); })();
+/* 신규 84㎡ 공급평당 분양가: 최근 3년 · 공공분양·신혼희망타운 제외(민간만) — 시장 대비 여유의 기준값 */
+const nearbyPrivate = lc => Market.nearbyPrice84(lc, { since: SINCE3, privateOnly: true });
+/* 단지별 평균 (같은 단지의 84㎡ 주택형 단순평균) */
+function byComplex(rows){
+  const m = new Map();
+  rows.forEach(r => { const g = m.get(r.name) || { name: r.name, date: r.date, n: 0, sum: 0 }; g.n++; g.sum += r.ppp; m.set(r.name, g); });
+  return [...m.values()].map(g => ({ name: g.name, date: g.date, n: g.n, avg: g.sum / g.n })).sort((a, b) => b.date.localeCompare(a.date));
+}
+/* 분양권 웃돈율 거래건수 가중평균 */
+const weightedPremium = pr => { const n = pr.rows.reduce((s, r) => s + r.n, 0); return n ? pr.rows.reduce((s, r) => s + r.ratio * r.n, 0) / n : null; };
+
+/* 시장 대비 여유 문장 (결론 옆에 붙인다): 상환 한계 평당가(적용 분양률) vs 인근 민간 신규 84㎡ 최저 단지 평균 */
+function marketRoomHtml(input){
+  const run = MK.run;
+  const lim = hasRevenue(input) ? Calc.breakEvenPrice(input, RATE, -input.sub) : null;
+  const nb = run ? nearbyPrivate(loadedComplexes(run)) : { avg: null, rows: [] };
+  const cxs = byComplex(nb.rows), low = cxs.length ? cxs.reduce((a, b) => b.avg < a.avg ? b : a) : null;
+  if (lim == null || !low) return `<span class="nodata">자료 없음 — 2장 공공데이터(인근 신규 84㎡ 분양가)가 필요합니다</span>`;
+  const room = Market.marketRoom(lim, low.avg);
+  return `상환 한계 평당가 ${N(lim,0,"만원")}(적용 분양률 ${Math.round(RATE*100)}%) vs 인근 민간 신규 84㎡ 최저 단지 ${esc(low.name)} 공급평당 평균 ${N(low.avg,0,"만원")}(최근 3년·공공 제외·분양최고금액 기준; 민간 전체 평균 ${N(nb.avg,0,"만원")}은 청라 아크원 프리미엄 포함) → ` +
+    (room >= 0 ? `인근 최저 단지가 한계보다 <b>${N(room,0,"만원")}</b> 높음 (시장가 수준이면 여유)`
+               : `인근 최저 단지가 한계보다 <b>${N(-room,0,"만원")}</b> 낮음 (시장가 수준이면 한계 미달)`);
+}
+
+/* 2장 시장 분석 — 공공데이터 표 5개 */
+function ch2(input){
+  const r = MK.region, run = MK.run;
+  const NOD = `<p class="nodata">자료 없음 — 공공데이터 확인 필요</p>`;
+  if (r.state !== "ok") {
+    return ch(2, "시장 분석", NOD + (["idle","wait","loading"].includes(r.state) ? "" : `<p class="note">사업대상지가 확인되지 않아 조회하지 않았습니다.</p>`));
+  }
+  if (!run) {
+    return ch(2, "시장 분석", NOD +
+      `<p class="note screen-only">${esc(r.name)}(${esc(r.code)}) 확인됨. 국토교통부 실거래가(분양권전매·전월세 최근 12개월)와 청약홈(최근 3년 단지)을 서버에서 불러옵니다.</p>` +
+      `<button type="button" class="screen-only" id="loadMarket">공공데이터 불러오기</button>`);
+  }
+  const region = { name: run.name, code: run.code };
+  const cnt = o => Object.values(o).filter(v => v.s === "ok").length;
+  const errs = o => Object.values(o).filter(v => v.s === "err").length;
+  const cxs = Object.values(run.cx), cxOk = cxs.filter(v => v.s === "ok").length, cxErr = cxs.filter(v => v.s === "err").length;
+  let h = `<div class="progress screen-only"><b>진행</b> 분양권 ${cnt(run.silv)}/12 · 전월세 ${cnt(run.rent)}/12 · 청약홈 ${cxOk}/${run.list.s === "ok" ? cxs.length : "?"}곳` +
+    (errs(run.silv) + errs(run.rent) + cxErr + (run.list.s === "err" ? 1 : 0) ? ` · <span class="err">실패 ${errs(run.silv)+errs(run.rent)+cxErr+(run.list.s==="err"?1:0)}건</span>` : "") + `</div>`;
+  h += `<p class="note" style="margin:0 0 6px">출처: 국토교통부 실거래가(분양권전매·전월세) · 한국부동산원 청약홈. 시군구 단위 조회.</p>`;
+
+  const silvOk = okOf(run.silv).map(v => v.data), rentOk = okOf(run.rent).map(v => v.data);
+  const fetched = [...okOf(run.silv), ...okOf(run.rent)].map(v => v.fetchedAt);
+  const sum = (arr, k) => arr.reduce((s, x) => s + (x[k] || 0), 0);
+
+  // ① 월별 거래 건수
+  h += `<div class="sub-h">① 월별 거래 건수 — 분양권 · 전월세</div>` +
+    metaLine(region, `분양권 ${fmt(sum(silvOk,"count"))}건(${silvOk.length}/12개월) · 전월세 ${fmt(sum(rentOk,"total"))}건(${rentOk.length}/12개월)`,
+      `분양권은 해제 ${fmt(sum(silvOk,"cancelled"))}건·입주권 ${fmt(sum(silvOk,"rights"))}건 제외 / 전월세는 제외 없이 전체(갱신·월세 포함)`, dateOf(fetched)) +
+    `<div class="tbl"><table class="rep-table"><thead><tr><th>계약월</th><th>분양권 (건)</th><th>전월세 (건)</th></tr></thead><tbody>` +
+    run.months.map(ym => `<tr><td>${ym.slice(0,4)}-${ym.slice(4)}</td><td>${monthCell(run,"silv",ym,d=>d.count)}</td><td>${monthCell(run,"rent",ym,d=>d.total)}</td></tr>`).join("") +
+    `</tbody><tfoot><tr><td>합계</td><td>${N(sum(silvOk,"count"))}</td><td>${N(sum(rentOk,"total"))}</td></tr></tfoot></table></div>`;
+
+  // ② 잔금 여력
+  const our = Market.ourHousehold84(input.types, input.price);
+  const cap = our ? Market.jeonseCapacity(rentOk, our.priceEok) : null;
+  h += `<div class="sub-h">② 잔금 여력 — 84㎡ 신규 전세 평균 ÷ 우리 84㎡ 세대당 분양가</div>` +
+    metaLine(region, cap ? `신규 전세 84㎡ ${fmt(cap.n)}건(전월세 ${rentOk.length}/12개월)` : `0건`,
+      `갱신 ${fmt(sum(rentOk,"renewal"))}건 · 월세 ${fmt(sum(rentOk,"monthly"))}건 · 계약구분 미기재 ${fmt(sum(rentOk,"unknownType"))}건 제외, 전용 84.00㎡ 이상 85.00㎡ 미만만`, dateOf(okOf(run.rent).map(v => v.fetchedAt)));
+  if (!our) h += `<p class="nodata">자료 없음 — 입력한 주택형에 전용 84㎡형(84.00~84.99㎡)이 하나여야 하고 평당가가 있어야 합니다</p>`;
+  else if (!cap) h += `<p class="nodata">자료 없음 — 불러온 달에 84㎡ 신규 전세 거래가 없습니다</p>`;
+  else h += kv("우리 84㎡ 세대당 분양가", N(our.priceEok,2,"억"), `공급 ${N(our.pyeong,1)}평 × 평당가 ${N(input.price,0)}만원 ÷ 10,000`) +
+    kv("84㎡ 신규 전세 평균", N(cap.avgDeposit/10000,2,"억"), `보증금 평균 ${N(cap.avgDeposit,0)}만원 (${fmt(cap.n)}건)`) +
+    kv("잔금 여력", P(cap.ratio,1), `신규 전세 평균 ÷ 세대당 분양가`, "tot");
+
+  // 청약홈 단지
+  const lc = loadedComplexes(run), cxFetched = [run.list.fetchedAt, ...lc.map(v => v.fetchedAt)];
+  const listState = run.list.s === "err" ? `<p class="err">청약홈 단지 목록 오류: ${esc(run.list.err)} <button type="button" class="mini-btn screen-only" data-retry="list">다시 시도</button></p>`
+    : run.list.s !== "ok" ? `<p class="nodata">청약홈 단지 목록을 불러오는 중…</p>` : "";
+  const cxFail = cxs.filter(v => v.s === "err").map(v => `<span class="err">${esc(v.info.name)}: ${esc(v.err)}</span> <button type="button" class="mini-btn screen-only" data-retry="cx|${esc(v.info.id)}|${esc(v.info.pblanc)}">다시 시도</button>`);
+  const cxNote = `<p class="meta-line">청약홈 ${cxOk}/${cxs.length}곳 반영${cxFail.length ? " · 실패: " + cxFail.join(" · ") : ""}</p>`;
+  const listNone = run.list.s === "ok" && !cxs.length;
+
+  // ③ 인근 신규 84㎡ 공급평당 분양가
+  const nb = Market.nearbyPrice84(lc, { since: SINCE3 }), nbp = nearbyPrivate(lc);
+  h += `<div class="sub-h">③ 인근 신규 84㎡ 공급평당 분양가 vs 우리 계획가</div>` +
+    metaLine(region, `${cxs.length}곳(최근 5년 공고) 중 최근 3년 ${nb.rows.length}개 주택형 · 이 중 민간 ${nbp.rows.length}개`,
+      `공고일 ${SINCE3} 이후(3년) · 공급위치에 지역명(서해구 조회 시 옛 '서구' 공고 포함, 검단구 동 제외) · 전용 84.00~84.99㎡만 · 분양최고금액이 없는 주택형 제외 · 공공분양·신혼희망타운은 평균에서 따로 구분(민간 기준 평균을 시장 대비 여유에 사용). 분양가는 주택형별 최고가(상한)라 평균 분양가보다 높음`, dateOf(cxFetched)) + listState + cxNote;
+  if (listNone) h += `<p class="nodata">자료 없음 — 최근 공급위치에 ${esc(run.name)}이(가) 들어간 단지가 없습니다</p>`;
+  else if (!nb.rows.length) h += run.list.s === "ok" && cxOk === cxs.length ? `<p class="nodata">자료 없음 — 최근 3년 84㎡ 주택형이 없습니다</p>` : "";
+  else h += `<div class="tbl"><table class="rep-table wide"><thead><tr><th class="l">단지</th><th>공고일</th><th>구분</th><th>주택형</th><th>공급 (평)</th><th>최고 분양가 (억)</th><th>공급평당 (만원)</th><th>우리 적용 ${input.price?N(input.price,0):""} 대비 (만원)</th></tr></thead><tbody>` +
+    nb.rows.map(x => `<tr><td class="l">${esc(x.name)}</td><td>${esc(x.date)}</td><td>${x.pub?"공공":"민간"}</td><td>${esc(x.ty)}</td><td>${N(x.pyeong,1)}</td><td>${N(x.amount/10000,2)}</td><td>${N(x.ppp,0)}</td><td>${input.price>0?N(x.ppp-input.price,0,"",true):N(null)}</td></tr>`).join("") +
+    `</tbody><tfoot><tr><td class="l">평균 — 전체(공공 포함)</td><td></td><td></td><td></td><td></td><td></td><td>${N(nb.avg,0)}</td><td>${input.price>0?N(nb.avg-input.price,0,"",true):N(null)}</td></tr>` +
+    `<tr><td class="l">평균 — 민간만 (시장 대비 여유 기준)</td><td></td><td></td><td></td><td></td><td></td><td>${N(nbp.avg,0)}</td><td>${input.price>0&&nbp.avg!=null?N(nbp.avg-input.price,0,"",true):N(null)}</td></tr></tfoot></table></div>`;
+
+  // ④ 분양권 웃돈
+  const pr = Market.premiums(silvOk, lc);
+  h += `<div class="sub-h">④ 분양권 웃돈 — 분양권 거래가 − 같은 단지 분양가</div>` +
+    metaLine(region, `분양권 ${fmt(pr.total)}건 중 ${fmt(pr.matched)}건 매칭 (분양권 ${silvOk.length}/12개월 · 청약홈 ${cxOk}/${cxs.length}곳)`,
+      `청약홈 최근 5년 공고와 매칭(3년보다 오래된 공고의 분양권도 잡기 위함) · 입주권 ${fmt(sum(silvOk,"rights"))}건·해제 ${fmt(sum(silvOk,"cancelled"))}건 제외 · 단지명·전용면적이 청약홈과 맞지 않는 ${fmt(pr.unmatched)}건 제외. 분양가는 주택형별 최고가(상한)라 웃돈은 하한에 가까움`,
+      dateOf([...fetched, ...cxFetched]));
+  if (!pr.total) h += `<p class="nodata">자료 없음 — 불러온 달에 분양권 거래가 없습니다</p>`;
+  else if (!pr.rows.length) h += `<p class="nodata">자료 없음 — 청약홈 단지와 맞는 분양권 거래가 없습니다</p>`;
+  else h += `<div class="tbl"><table class="rep-table wide"><thead><tr><th class="l">단지</th><th>주택형</th><th>거래 (건)</th><th>평균 거래가 (억)</th><th>분양가 (억)</th><th>웃돈 (억)</th><th>웃돈율</th></tr></thead><tbody>` +
+    pr.rows.map(x => `<tr><td class="l">${esc(x.name)}</td><td>${esc(x.ty)}</td><td>${N(x.n)}</td><td>${N(x.avgDeal/10000,2)}</td><td>${N(x.price/10000,2)}</td><td>${N(x.premium/10000,2,"",true)}</td><td>${P(x.ratio,1,true)}</td></tr>`).join("") + `</tbody></table></div>`;
+
+  // ⑤ 1·2순위 미달 주택형 · 잔여세대
+  const sh = Market.shortages(lc, SINCE3);
+  const unfilled = sh.rows.filter(x => x.remain > 0); // 1순위·2순위를 모두 거치고도 남은 주택형
+  const remainTotal = unfilled.reduce((s, x) => s + x.remain, 0);
+  h += `<div class="sub-h">⑤ 1·2순위 미달 주택형 · 잔여세대</div>` +
+    metaLine(region, `1·2순위 미달 주택형 ${unfilled.length}개 / 판정 ${sh.checked}개 · 잔여 ${fmt(remainTotal)}세대 · 청약 단계 소진률 ${sh.supplyChecked ? (100 - sh.remainChecked / sh.supplyChecked * 100).toFixed(1) + "% (일반공급 " + fmt(sh.supplyChecked) + "세대 중 잔여 " + fmt(sh.remainChecked) + ")" : "-"} · 공고일 ${SINCE3} 이후(3년)`,
+      `일반공급 세대수가 없는 주택형은 판정 안 함, 접수 자료가 없는 주택형 ${sh.noRates}개도 판정 안 함. 1순위 접수건수(전 거주지역 합)가 일반공급 세대수 미만이면 1순위 미달(${sh.rows.length}개), 2순위 접수까지 합해도 모자란 ${unfilled.length}개만 표시. 잔여 = 일반공급 − (1순위+2순위 접수)`, dateOf(cxFetched)) + cxNote;
+  if (!lc.length) h += `<p class="nodata">자료 없음</p>`;
+  else if (!unfilled.length) h += `<p class="nodata">1·2순위 미달로 남은 주택형 없음 (판정 ${sh.checked}개 중 1순위 미달 ${sh.rows.length}개, 모두 2순위에서 소진)</p>`;
+  else h += `<div class="tbl"><table class="rep-table wide"><thead><tr><th class="l">단지</th><th>주택형</th><th>일반공급 (세대)</th><th>1순위 접수 (경쟁률)</th><th>2순위 접수 (경쟁률)</th><th>잔여 (세대)</th></tr></thead><tbody>` +
+    unfilled.map(x => `<tr><td class="l">${esc(x.name)}</td><td>${esc(x.ty)}</td><td>${N(x.supply)}</td><td>${N(x.req1)} (${N(x.rate1,2)}:1)</td><td>${N(x.req2)} (${N(x.rate2,2)}:1)</td><td>${N(x.remain)}</td></tr>`).join("") +
+    `</tbody><tfoot><tr><td class="l">합계</td><td></td><td></td><td></td><td></td><td>${N(remainTotal)}</td></tr></tfoot></table></div>`;
+
+  // 결론 옆: 시장 대비 여유
+  h += `<div class="conc"><b>시장 대비 여유</b> — ${marketRoomHtml(input)}</div>`;
+  return ch(2, "시장 분석", h);
+}
+
+/* 사업수지를 계산할 수 있는지(공급면적·평당가 입력 여부) */
+const hasRevenue = input => Calc.totalArea(input.types) > 0 && input.price > 0;
+
+/* 3장 사업수지 */
+function ch3(input){
+  if (!hasRevenue(input)) return ch(3, "사업수지", NODATA);
+  const b = Calc.breakdown(input, RATE), cash = Calc.endCash(input, RATE);
+  const area = Calc.totalArea(input.types), units = Calc.totalUnits(input.types);
+  const body =
+    `<p class="note" style="margin:0 0 8px">분양률 ${RATE*100}% 가정 · 금액 단위 억원</p>` +
+    kv("분양수입", N(b.revenue,1), `(공급면적 ${N(area,1)}평 × 평당가 ${N(input.price,0)}만원 ÷ 10,000 + 상가 ${blank("retail")?"미입력":N(input.retail,1)}억) × 분양률 ${RATE*100}%`) +
+    kv("학교용지부담금", N(-b.schoolFee,1), `분양수입 × 0.8%`) +
+    kv("분양대행수수료", N(-b.agencyFee,1), `팔린 세대 ${N(b.soldUnits,0)} × 300만원`) +
+    kv("기타유입", valOrBlank("other",1,"",true), `입력값`) +
+    kv("고정비", blank("fixed") ? valOrBlank("fixed") : N(-input.fixed,1), `입력값`) +
+    kv("기말현금", N(cash,1,"",true), `분양수입 × (1 − 0.8%) − 팔린 세대 × 300만원 + 기타유입 − 고정비`, "tot") +
+    (["retail","other","fixed"].some(blank) ? `<p class="note">미입력 항목은 0으로 계산했습니다.</p>` : "");
+  return ch(3, "사업수지", body);
+}
+
+/* 4장 자금조달과 상환 */
+function ch4(input){
+  if (["pf","pfCost","sub"].every(blank)) return ch(4, "자금조달과 상환", NODATA);
+  const debt = input.pf + input.pfCost;
+  let body =
+    kv("본PF", valOrBlank("pf",0), "입력값") +
+    kv("본PF 금융비용", valOrBlank("pfCost",0), "입력값") +
+    kv("후순위", valOrBlank("sub",0), "입력값") +
+    kv("상환 대상 합계", N(debt,0), "본PF + 본PF 금융비용");
+
+  if (!hasRevenue(input)) {
+    return ch(4, "자금조달과 상환", body + `<div class="sub-h">상환 지표</div>` + NODATA);
+  }
+  const cash = Calc.endCash(input, RATE), d = Calc.dscr(input, RATE), l = Calc.ltv(input);
+  const ok = Calc.repayable(input, RATE);
+  body +=
+    kv("만기 누적 DSCR", d == null ? N(null) : N(d,2),
+       `1 + (기말현금 + 후순위) ÷ (본PF + 본PF 금융비용) = 1 + (${N(cash,1)} + ${N(input.sub,0)}) ÷ (${N(input.pf,0)} + ${N(input.pfCost,0)})`, "tot") +
+    kv("LTV", l == null ? N(null) : P(l,1),
+       `본PF ÷ 분양률 100%일 때 분양수입 = ${N(input.pf,0)} ÷ ${N(Calc.salesRevenue(input,1),1)}`) +
+    kv("상환 가능 여부", `<span class="badge ${ok?"ok":"no"}">${ok?"상환 가능":"상환 불가"}</span>`,
+       `기말현금이 −후순위 이상이면 가능: ${N(cash,1)} ${ok?"≥":"<"} ${N(-input.sub,0)}`);
+
+  const lim = Calc.limits(input);
+  const hopeIn = input.hope > 0 ? { ...input, price: input.hope } : null;   // 희망 평당가 기준 (사업팀 초안)
+  const limH = hopeIn ? Calc.limits(hopeIn) : null;
+  const rowH = (label, f, key, target) => `<tr><td>${label}<div class="note" style="margin:0">${f}</div></td>` +
+    `<td>${limH ? P(limH[key].rateAtPlan) : N(null)}</td><td>${limH ? N(limH[key].priceAtFull,0,"만원") : N(null)}</td>` +
+    `<td>${P(lim[key].rateAtPlan)}</td><td>${N(lim[key].priceAtFull,0,"만원")}</td><td>${N(Calc.breakEvenPrice(input, RATE, target),0,"만원")}</td></tr>`;
+  body += `<div class="sub-h">두 한계선 — 희망 평당가 기준과 적용 평당가 기준을 따로</div><div class="tbl"><table class="rep-table wide"><thead><tr>
+    <th class="l" rowspan="2">구분</th><th colspan="2">희망 평당가 ${input.hope>0?N(input.hope,0):""}만원 기준</th><th colspan="3">적용 평당가 ${N(input.price,0)}만원 기준</th></tr><tr>
+    <th>한계 분양률<br>(희망 평당가에서)</th><th>한계 평당가<br>(분양률 100%에서)</th><th>한계 분양률<br>(적용 평당가에서)</th><th>한계 평당가<br>(분양률 100%에서)</th><th>한계 평당가<br>(적용 분양률 ${Math.round(RATE*100)}%에서)</th></tr></thead><tbody>` +
+    rowH("기말현금 0", "기말현금 = 0", "zero", 0) +
+    rowH("상환 한계", "기말현금 = −후순위 (본PF 전액 상환 한계)", "repay", -input.sub) +
+    `</tbody></table></div><p class="note">평당가는 아파트 공급면적 가중평균(타입별 평당가를 같은 비율로 조정). 분양률은 아파트·상가에 같은 비율 적용. 분양수입은 계약 시점 현금흐름 단순화(월별 자금수지는 범위 밖).</p>`;
+  return ch(4, "자금조달과 상환", body);
+}
+
+/* 5장 민감도 */
+function ch5(input){
+  if (!hasRevenue(input)) return ch(5, "민감도", NODATA);
+  const rates = [0.7,0.75,0.8,0.85,0.9,0.95,1], deltas = [-500,-400,-300,-200,-100,0,100];
+  const grid = Calc.sensitivity(input, rates, deltas);
+  let h = `<div class="tbl"><table class="sens"><thead><tr><th>분양률 \\ 평당가(만원)</th>` + deltas.map(d =>
+    `<th>${fmt(input.price+d,0)}<br><span style="font-weight:400">${d>0?"+":""}${d}</span></th>`).join("") + `</tr></thead><tbody>`;
+  grid.forEach((row,i) => {
+    h += `<tr><td class="rh">${Math.round(rates[i]*100)}%</td>` + row.map((c,j) =>
+      `<td class="${c.ok?"ok":"no"}${deltas[j]===0?" plan":""}">${N(c.cash,1,"",true)}</td>`).join("") + `</tr>`;
+  });
+  h += `</tbody></table></div>
+    <p class="note">칸 = 기말현금(억원) · <span class="dot ok"></span>상환 가능(기말현금 ≥ −후순위) <span class="dot no"></span>상환 불가 · 테두리 = 계획 평당가</p>`;
+  if (!blank("sub") || !blank("pf")) {
+    const need = Calc.breakEvenRate(input, input.price, -input.sub);
+    h += `<p class="verdict">` + (need == null ? "" : need > 1
+      ? `평당 ${fmt(input.price,0)}만원에서는 분양률 100%여도 상환 불가`
+      : `평당 ${fmt(input.price,0)}만원 / 분양률 ${fmt(Math.ceil(need*1000-1e-9)/10,1)}% 이상이면 상환 가능`) + `</p>`;
+    h += `<p class="note" style="font-size:13px;color:var(--ink)"><b>시장 대비 여유</b> — ${marketRoomHtml(input)}</p>`;
+  }
+  return ch(5, "민감도", h);
+}
+
+/* 6장 리스크와 완화 방안 — 두 한계선에서 거꾸로 짚는다 */
+function ch6(input){
+  if (!hasRevenue(input) || (blank("pf") && blank("sub"))) return ch(6, "리스크와 완화 방안", NODATA);
+  const m = Calc.margins(input, RATE);
+  const cash = Calc.endCash(input, RATE);
+  const risk = (title, basis, mitig) => `<div class="risk"><h3>${title}</h3>
+    <p><span class="lbl">근거</span>${basis}</p><p><span class="lbl">완화 방안</span>${mitig}</p></div>`;
+
+  // 한계까지 여유 문장: margin ≥ 0이면 여유, 음수면 이미 미달
+  const room = (margin, fmtOk, fmtNo) => margin == null ? "산출 불가" : margin >= 0 ? fmtOk(margin) : `<span class="warn">${fmtNo(-margin)}</span>`;
+  const out = [];
+
+  out.push(risk("① 분양률 하락",
+    `상환 한계 분양률 ${P(m.limitRateRepay)} (기말현금 0 한계 ${P(m.limitRateZero)}). ` +
+    room(m.rateMarginRepay, x => `계획 분양률 ${RATE*100}% 대비 ${N(x*100,1,"%p")}까지 하락해도 상환 가능.`,
+      x => `계획 분양률 ${RATE*100}%에서도 상환 한계에 ${N(x*100,1,"%p")} 미달.`),
+    `분양 계약률을 한계 분양률 대비로 관리하고, 한계에 근접하면 분양조건 조정·판촉 방안을 대주단과 사전에 협의한다.`));
+
+  out.push(risk("② 분양가(평당가) 하락",
+    `분양률 ${RATE*100}%에서 상환 한계 평당가 ${N(m.limitPriceRepay,0,"만원")} (기말현금 0 한계 ${N(m.limitPriceZero,0,"만원")}). ` +
+    room(m.priceMarginRepay, x => `계획 평당가 대비 ${N(x,0,"만원")}(${N(x/input.price*100,1,"%")})까지 하락해도 상환 가능.`,
+      x => `계획 평당가에서도 상환 한계에 ${N(x,0,"만원")} 미달.`),
+    `평당가 하락 시 상가·기타유입 보강, 고정비 절감, 후순위 증액 여부를 단계별로 검토한다.`));
+
+  out.push(risk("③ 사업비(고정비) 증가",
+    room(m.fixedMargin, x => `고정비가 ${N(x,1,"억원")} 늘면 기말현금이 −후순위에 도달 (현재 고정비 ${blank("fixed")?"미입력":N(input.fixed,1,"억원")}).`,
+      x => `이미 상환 한계에 ${N(x,1,"억원")} 부족한 상태.`) +
+    ` <span class="note">여유 = 기말현금 + 후순위</span>`,
+    `고정비 구성(공사비 증액 조건 등)을 확인해 증액 한도를 계약으로 관리하고, 예비비 운용 기준을 둔다.`));
+
+  if (input.sub > 0 && m.limitRateRepay != null && m.limitRateZero != null) {
+    out.push(risk("④ 후순위 의존",
+      `기말현금이 0 미만이어도 후순위 ${N(input.sub,0,"억원")}으로 메워 상환 가능한 구간은 분양률 ${P(m.limitRateRepay)} ~ ${P(m.limitRateZero)}. ` +
+      `이 구간은 후순위 조달이 확정되어야 성립. 계획 기말현금 ${N(cash,1,"억원",true)}.`,
+      `후순위 약정·인출 조건을 PF 대출약정과 함께 확인하고, 후순위 미조달 시의 대안을 마련한다.`));
+  }
+  return ch(6, "리스크와 완화 방안", `<p class="note" style="margin:0">두 한계선(기말현금 0 · 상환 한계)에서 거꾸로 계산한 여유를 기준으로 한다.</p>` + out.join(""));
+}
+
+/* 7장 확인하지 못한 것 */
+function ch7(){
+  const cn = isCheongna();
+  const items = [
+    "월별 자금수지 · IRR은 이 앱의 범위 밖입니다.",
+    "시장 분석은 시군구 단위 공공데이터(국토교통부 실거래가 · 청약홈)만 사용합니다. 불러오지 않았거나 실패한 달·단지는 반영되지 않았고, 인근 생활권 단지만 따로 고르지는 못했습니다. 실거래 신고 지연으로 최근 달은 건수가 적을 수 있습니다.",
+    "분양권 웃돈은 단지명·전용면적이 청약홈과 맞는 거래만 계산하며, 분양가는 주택형별 최고가(상한)라 웃돈은 하한에 가깝습니다.",
+    "1·2순위 미달·잔여세대는 접수건수로 계산한 값이며, 특별공급 이월 · 부적격 · 미계약은 반영하지 못했습니다.",
+    "분양률은 입력한 한 값(미입력 시 100%)을 전 기간 같은 비율로 적용합니다. 분양 속도(시점별 분양률)는 반영하지 않았습니다.",
+    "학교용지부담금 0.8%, 분양대행수수료 세대당 300만원은 고정 가정이며 사업장별로 확인하지 않았습니다.",
+    "고정비 · 본PF · 금융비용 · 후순위는 입력값 그대로이며, 세부 항목(토지비·공사비 등)과 약정 조건은 확인하지 않았습니다.",
+    "입력값의 사실 여부(분양가·세대수 등)는 검증하지 않았습니다.",
+    ...(cn ? [
+      "청라: 서해구 시군구 단위 자료라 청라동만의 자료가 아닙니다. 청라 아크원 푸르지오(2026-10-22 공고)는 계약 결과가 없어 청약 접수만 반영했습니다.",
+      "청라: 적용 분양률 85%(청약 소진률에서 5%p 하향)는 근거 자료로 증명되지 않는 PM 판단입니다. 민감도(70~100%)로 범위를 보였을 뿐 계약률 자료는 없습니다.",
+      "청라: 도급계약은 발췌본만 확인했습니다. 신용보강 부재는 발췌 기준이며 전문에서 확인이 필요합니다. 시공사 재무는 합성 데이터이고 2026년 이후 실적은 없습니다.",
+      "청라: 미분양담보대출의 담보인정비율·인출 조건, 유보금과 시행사 대여금의 지급 순서는 자료에 없어 분양가 전액 담보·합산 후순위로 단순화했습니다.",
+    ] : []),
+  ];
+  return ch(7, "확인하지 못한 것", `<ul class="todo">${items.map(x => `<li>${x}</li>`).join("")}</ul>`);
+}
+
+/* ═════ 청라 레이크포레 전용 장 — 원자료(01·02·03·06·07) 해석과 판단 ═════
+ * 숫자는 cheongna.js(원자료 계산) · calc.js · market.js · 공공데이터 결과에서 계산해 넣는다. */
+const E = x => N(x, 1, "억");              // 억원
+const MM = (x, d=0) => N(x, d);           // 백만원
+const trow = (...c) => `<tr>${c.map((x, i) => `<td${i === 0 || c.l?.[i] ? ` class="l"` : ""}>${x}</td>`).join("")}</tr>`;
+const tbl = (head, rows, cls="rep-table wide txt") => `<div class="tbl"><table class="${cls}"><thead><tr>${head.map((x, i) => `<th${i === 0 ? ` class="l"` : ""}>${x}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody></table></div>`;
+
+/* 1장 보강: 2026-07-01 서구 → 서해구·검단구 개편 확인 결과 */
+function regionNote(){
+  const r = MK.region;
+  if (!isCheongna() || !$("site").value.includes("서해구")) return "";
+  return `<div class="sub-h">사업대상지 확인 — 2026-07-01 인천 서구 → 서해구·검단구 개편</div>
+    <div class="warnbox"><b>청라동은 현재 서해구 소속</b>입니다. 사업계획서 초안의 '서해구 청라동'은 법정동코드에서도 확인됩니다.</div>
+    ${tbl(["확인 항목","결과 (2026-11-19 조회)"], [
+      trow("행정표준코드 법정동코드", `'인천광역시 서구'는 조회 0건(INFO-3). <b>인천광역시 서해구 = 28275</b>, 청라동 = 2827511100 (적용일 2026-07-01). 검단구 = 28290`),
+      trow("앱의 지역 확인", r.state === "ok" ? `<b>${esc(r.name)}</b> → <b>${esc(r.code)}</b> (서버가 정확히 하나로 일치할 때만 통과)` : `<span class="nodata">확인 중이거나 미확인</span>`),
+      trow("국토교통부 실거래가 (분양권·전월세)", `새 코드 <b>28275에 개편 전 달까지 소급 적재</b> (예: 2025-04 분양권 5건·전월세 662건). 구 서구 코드 28260은 전 기간 0건 → 구 코드로 조회하면 전부 비어 보임`),
+      trow("청약홈 분양정보", `<b>개편 전 공고의 공급위치는 '인천광역시 서구'로 남아 있음</b>(검암역자이르네·인가정2 등). '서해구'만 검색하면 개편 전 공고가 빠지므로, 서버가 옛 '서구' 공고도 함께 조회하고 <b>검단구 쪽 동(검단신도시·마전·불로·원당·당하·왕길 등)은 제외</b>`),
+      trow("한계", `시군구(서해구) 단위 조회라 청라동만의 자료가 아닙니다(검암·가정·경서·연희·석남 등 포함). 청라 단독 판단은 단지 목록(2장)으로 확인`),
+    ])}`;
+}
+
+/* 입력값 산출 장 — 02 공란 4개 · 고정비 · 기타유입 · 후순위 */
+function chInputs(){
+  const d = Cheongna.derive(), p = Cheongna.preset();
+  const g = Cheongna.fixedByGroup();
+  const head4 = ["항목","산식 (산정근거 열의 요율)","금액 (백만원)","분류"];
+  const rows4 = [
+    trow("학교용지부담금", `총분양가 ${MM(d.total,1)} × 0.8% <span class="note">(총분양가 = 아파트 ${MM(d.apt,1)} + 근린 ${MM(d.shop,1)}, 03 희망가 기준)</span>`, MM(d.school,1), "변동비"),
+    trow("분양대행수수료(아파트)", `${d.units}세대 × 300만원(3백만원)`, MM(d.agency,1), "변동비"),
+    trow("사업예비비", `직접공사비 ${MM(Cheongna.TERMS.directCost)} × 3%`, MM(d.reserve,1), "고정비"),
+    trow("중도금이자후불제", `아파트 분양가 ${MM(d.apt,1)} × 중도금 60% × 연 5.2% × 18/12 <span class="note">(중도금 대상은 612세대 아파트)</span>`, MM(d.mid,1), "상쇄 (유입=지출)"),
+  ];
+  const gRows = g.map(x => trow(x.grp, "", MM(x.v), "고정비")).concat(trow("<b>고정비 합계</b>", `소요자금 표기 항목 ${MM(d.listed)} − 이자상환적립 ${MM(d.escrow)} + 사업예비비 ${MM(d.reserve)}`, `<b>${MM(d.fixed)}</b>`, "금융비용 " + MM(d.financing) + " · 후순위 48,000 포함"));
+  const sumRows = [
+    trow("고정비", "나머지 소요자금 + 금융비용 전체", MM(d.fixed), ""),
+    trow("변동비", "학교용지부담금 + 분양대행수수료(아파트)", MM(d.variable,1), "분양 실적에 따라 움직임"),
+    trow("상쇄 항목", "중도금이자후불제 + 이자상환적립계정 (01 Ⅲ-1: 이자 선지급 후 입주 시 회수 / 만기 환입 → 유입에도 같은 금액)", MM(d.offset,1), "기말현금에서 상쇄"),
+    trow("<b>총투자비 (= 고정비 + 변동비 + 상쇄)</b>", "", `<b>${MM(d.totalInvest,1)}</b>`, ""),
+  ];
+  const etc = [
+    trow("기타유입", `시행사 출자금·대여금 22,000 + 예치금 이자수입 1,450 (01 Ⅲ-2)`, MM(d.other), "분양대금 외 유입"),
+    trow("후순위", `07 제9조 공사비 유보금 42,000 + 시행사 대여금 6,000 (01 Ⅲ-1)`, MM(d.sub), "본PF 원리금 전액 상환 이후 지급"),
+    trow("본PF", `Tr-A 105,000 + Tr-B 25,000 (한도 전액 실행 가정)`, MM(d.pf), "브릿지론 82,000은 본PF로 상환, 미분양담보대출 40,000은 미상환 발생 시에만"),
+    trow("본PF 금융비용", `Tr-A 이자 18,018 + 수수료 1,575 + Tr-B 이자 4,441 + 수수료 500`, MM(d.pfCost), "DSCR 분모 (브릿지론·미분양담보 비용 제외)"),
+  ];
+  const app = [
+    ["평당가 · 적용", p.price, "만원"], ["평당가 · 희망", p.hope, "만원"], ["적용 분양률", p.rate, "%"], ["상가", p.retail, "억원"], ["기타유입", p.other, "억원"],
+    ["고정비", p.fixed, "억원"], ["본PF", p.pf, "억원"], ["본PF 금융비용", p.pfCost, "억원"], ["후순위", p.sub, "억원"],
+  ].map(x => trow(x[0], "", MM(x[1], 2), x[2]));
+  return ch(0, "입력값 산출", `<p class="note" style="margin:0 0 6px">금액 단위 백만원(앱 입력칸은 억원). 원자료 02 소요자금 · 03 분양계획 · 01 Ⅲ장 · 07 제9조. 이 장의 모든 합계는 <code>cheongna.js</code>가 원자료에서 계산하고 <code>npm test</code>가 검산합니다.</p>
+    <div class="sub-h">① 공란 4개 산출</div>${tbl(head4, rows4)}
+    <div class="sub-h">② 고정비 — 구분별 소계</div>${tbl(["구분","산식","금액 (백만원)","분류"], gRows)}
+    <div class="sub-h">③ 총투자비 확정</div>${tbl(["구분","내용","금액 (백만원)","비고"], sumRows)}
+    <div class="sub-h">④ 기타유입 · 후순위 · 본PF</div>${tbl(["항목","산식","금액 (백만원)","비고"], etc)}
+    <div class="sub-h">⑤ 앱 입력값 (이 페이지 입력칸에 들어간 값)</div>${tbl(["입력칸","","값","단위"], app)}
+    <div class="sub-h">판단한 부분</div><ul class="todo">
+      <li><b>학교용지부담금</b>: '총분양가 × 0.8%'의 총분양가에 근린상가를 포함했습니다(앱 계산기와 같은 기준 → 역산이 일치). 아파트만 보면 ${MM(d.apt*0.008,1)}로 ${MM(d.shop*0.008,1)}백만원 적습니다.</li>
+      <li><b>변동비</b>는 학교용지·분양대행 둘뿐입니다. 중도금이자는 분양에 따라 늘지만 유입에 같은 금액이 잡혀 상쇄되므로 변동비가 아닙니다.</li>
+      <li><b>후순위 48,000은 고정비에도 들어 있습니다</b>(직접공사비 189,000에 유보금 42,000 포함, 대여금 상환 6,000은 소요자금 항목). 그래서 '기말현금 = −후순위'는 '본PF를 전액 갚고 후순위는 못 준 상태'입니다.</li>
+      <li>분양대행수수료는 팔린 세대 기준(분양률 비례)으로 계산합니다. 612세대 전부 분양 시 ${MM(d.agency)}백만원.</li>
+    </ul>`);
+}
+
+/* 분양 가정의 근거 — 적용 분양가·분양률 (공공데이터 분석 결과 기반) */
+function chBasis(input){
+  const run = MK.run, d = Cheongna.derive(), A = Cheongna.APPLIED;
+  const lc = run ? loadedComplexes(run) : [];
+  const nbp = run ? nearbyPrivate(lc) : { rows: [] };
+  const cxs = byComplex(nbp.rows);
+  const silvOk = run ? okOf(run.silv).map(v => v.data) : [];
+  const pr = run ? Market.premiums(silvOk, lc) : { rows: [], matched: 0, total: 0 };
+  const wp = weightedPremium(pr);
+  const sh = run ? Market.shortages(lc, SINCE3) : { checked: 0, supplyChecked: 0, remainChecked: 0, rows: [] };
+  const burn = sh.supplyChecked ? 1 - sh.remainChecked / sh.supplyChecked : null;
+  const fetched = run ? dateOf([...okOf(run.silv), ...Object.values(run.cx).filter(v => v.s==="ok"), run.list].map(v => v.fetchedAt)) : "-";
+  const head = `<div class="tbl"><table class="rep-table wide"><thead><tr><th class="l">항목</th><th>사업팀 희망</th><th>적용</th><th class="l">근거</th></tr></thead><tbody>` +
+    trow("84㎡ 공급평당가 (A·B 가중)", `${MM(A.hope84)}만원`, `<b>${MM(A.price84)}만원</b>`, "아래 ① 민간 최저 단지 평균 × (1 + ② 분양권 웃돈율)") +
+    trow("아파트 평당가 (공급면적 가중평균)", `${MM(d.avgHope,1)}만원`, `<b>${MM(input.price)}만원</b>`, `희망가 × ${(A.price84/A.hope84*100).toFixed(1)}% (타입별 평당가를 같은 비율로 조정)`) +
+    trow("분양률", "미정", `<b>${Math.round(RATE*100)}%</b>`, "아래 ③ 청약 단계 소진률(계약률의 상한)에서 한 구간 하향") + `</tbody></table></div>`;
+  if (!run) return ch(0, "분양 가정의 근거", head + `<p class="nodata">자료 없음 — 2장 공공데이터를 불러오면 근거표가 채워집니다</p>`);
+  const meta = (cnt, ex) => metaLine({ name: run.name, code: run.code }, cnt, ex, fetched);
+  const lowest = cxs.length ? cxs.reduce((a, b) => b.avg < a.avg ? b : a) : null;
+  const calc = lowest && wp != null ? lowest.avg * (1 + wp) : null;
+  return ch(0, "분양 가정의 근거",
+    head +
+    `<div class="sub-h">① 인근 민간 신규 84㎡ 공급평당 분양가 (청약홈 분양최고금액)</div>` +
+    meta(`${cxs.length}개 단지 · ${nbp.rows.length}개 주택형`, `공고일 ${SINCE3} 이후(3년) · 서해구(옛 서구 공고 포함, 검단구 제외) · 전용 84.00~84.99㎡ · <b>공공분양·신혼희망타운 제외</b> · 분양최고금액 없는 주택형 제외 · 분양최고금액은 평균 분양가보다 높은 상한값`) +
+    (cxs.length ? tbl(["단지","공고일","84㎡ 주택형 수","공급평당 평균 (만원)","우리 희망 84㎡ ("+A.hope84+") 대비"], cxs.map(x => trow(esc(x.name), esc(x.date), N(x.n), N(x.avg,0), N(x.avg - A.hope84,0,"",true)))) : `<p class="nodata">자료 없음</p>`) +
+    `<p class="note">청라 아크원 푸르지오는 청라국제업무단지 프리미엄 입지이고 공고(2026-10-22) 직후라 <b>계약 결과가 없으며 103㎡ 일부 주택형은 이미 미달</b>이라, 기준값이 아닌 상단 참고로만 봅니다. 기준은 <b>가장 낮은 민간 단지 평균</b>(분양최고금액의 상향 편의를 상쇄)으로 잡았습니다.</p>` +
+    `<div class="sub-h">② 분양권 웃돈 — 시장이 분양가 위에 값을 얹어 주는가</div>` +
+    meta(`분양권 ${fmt(pr.total)}건 중 ${fmt(pr.matched)}건 매칭 · ${pr.rows.length}개 주택형`, `해제·입주권 제외 · 단지명·전용면적이 청약홈 <b>최근 5년 공고</b>와 맞는 거래만 · 분양가는 최고금액이라 웃돈은 하한에 가까움`) +
+    (pr.rows.length ? tbl(["단지","주택형","거래 (건)","평균 거래가 (억)","분양가 (억)","웃돈율"], pr.rows.map(x => trow(esc(x.name), esc(x.ty), N(x.n), N(x.avgDeal/10000,2), N(x.price/10000,2), P(x.ratio,1,true)))) +
+      `<p class="note">거래건수 가중평균 웃돈율 <b>${P(wp,1,true)}</b> — 분양 3년이 지난 단지의 분양권이 <b>분양가보다 싸게</b> 거래(마이너스 거래)됩니다. 분양가를 올릴 여지는 없고, 오히려 인근 분양가가 상한에 가깝다는 뜻입니다.</p>` : `<p class="nodata">자료 없음</p>`) +
+    `<div class="sub-h">③ 청약 단계 소진률 — 분양률의 상한 근거</div>` +
+    meta(`판정 ${sh.checked}개 주택형 · 일반공급 ${fmt(sh.supplyChecked)}세대 · 잔여 ${fmt(sh.remainChecked)}세대`, `공고일 ${SINCE3} 이후 · 접수 자료 없는 주택형(공공분양 등) 판정 안 함 · 1·2순위 접수건수(전 거주지역 합)로 계산. <b>접수는 계약이 아니며</b> 부적격·포기·미계약은 반영되지 않아 계약률의 상한`) +
+    (burn != null ? `<p class="note" style="font-size:13px;color:var(--ink)">청약 단계 소진률 <b>${P(burn,1)}</b> (1순위 미달 주택형 ${sh.rows.length}개 / 판정 ${sh.checked}개)</p>` : `<p class="nodata">자료 없음</p>`) +
+    `<div class="conc"><b>적용값 산출</b> — 84㎡ 적용 평당가 = 민간 최저 단지 평균 ${lowest ? MM(lowest.avg,0) : "-"} × (1 ${wp != null ? (wp < 0 ? "−" : "+") + " " + (Math.abs(wp)*100).toFixed(1) + "%" : ""}) = <b>${calc != null ? MM(calc,0) : "-"}만원</b> → 채택 ${MM(A.price84)}만원(희망 ${MM(A.hope84)}만원의 ${(A.price84/A.hope84*100).toFixed(1)}%).<br>` +
+    `적용 분양률 = 청약 단계 소진률 ${burn != null ? P(burn,1) : "-"}(상한)에서 마이너스 거래·고가 주택형 미달을 반영해 한 구간(5%p) 낮춘 <b>${Math.round(A.rate*100)}%</b> — 이 5%p는 근거 자료로 증명되지 않는 <b>PM 판단</b>이며, 5장 민감도(분양률 70~100%)로 검증합니다. 희망가는 이미 시장 하단이라 가격을 더 깎기보다 <b>분양률이 핵심 변수</b>입니다.</div>`);
+}
+
+/* 시장 대비 여유 해석 — 신호별 비교 기준과 기준을 정한 근거 */
+function chSignals(input){
+  const run = MK.run;
+  if (!hasRevenue(input)) return ch(0, "시장 대비 여유 해석", NODATA);
+  const lim = Calc.limits(input), limAtRate = Calc.breakEvenPrice(input, RATE, -input.sub);
+  const date = run ? dateOf([run.list.fetchedAt, ...okOf(run.silv).map(v => v.fetchedAt)]) : "-";
+  if (!run) return ch(0, "시장 대비 여유 해석", `<p class="nodata">자료 없음 — 2장 공공데이터가 필요합니다</p>`);
+  const lc = loadedComplexes(run), nbp = nearbyPrivate(lc), cxs = byComplex(nbp.rows);
+  const lowest = cxs.length ? cxs.reduce((a, b) => b.avg < a.avg ? b : a) : null;
+  const pr = Market.premiums(okOf(run.silv).map(v => v.data), lc), wp = weightedPremium(pr);
+  const sh = Market.shortages(lc, SINCE3), burn = sh.supplyChecked ? 1 - sh.remainChecked / sh.supplyChecked : null;
+  const our = Market.ourHousehold84(input.types, input.price);
+  const cap = our ? Market.jeonseCapacity(okOf(run.rent).map(v => v.data), our.priceEok) : null;
+  const unsold = (1 - RATE) * Calc.salesRevenue(input, 1), loan = 400;
+  const rows = [];
+  const tag = (ok) => `<span class="badge ${ok ? "ok" : "no"}">${ok ? "여유" : "경고"}</span>`;
+  if (lowest) rows.push(trow("① 상환 한계 평당가 vs 인근 민간 신규 분양가", `${MM(limAtRate)}만원 <span class="note">(적용 분양률 ${Math.round(RATE*100)}%에서; 100%면 ${MM(lim.repay.priceAtFull)}만원)</span>`,
+    `${MM(lowest.avg)}만원 — ${esc(lowest.name)} 84㎡ 공급평당 평균 (민간 최저 단지, 최근 3년)`, `${P((lowest.avg - limAtRate)/lowest.avg,1,true)} ${tag(lowest.avg > limAtRate)}`,
+    "분양최고금액은 평균보다 높은 상한값이라 평균이 아니라 민간 최저 단지를 기준으로 삼아 편향을 상쇄. 공공분양은 분양가 규제 대상이라 제외, 아크원은 입지 프리미엄·계약 미확인이라 제외"));
+  if (burn != null) rows.push(trow("② 상환 한계 분양률 vs 청약 단계 소진률", `${P(lim.repay.rateAtPlan,1)} <span class="note">(적용 평당가 ${MM(input.price)}만원에서)</span>`,
+    `${P(burn,1)} — 인근 신규 ${sh.checked}개 주택형 일반공급 ${fmt(sh.supplyChecked)}세대 중 소진`, `${N((burn - lim.repay.rateAtPlan)*100,1,"%p",true)} ${tag(burn > lim.repay.rateAtPlan)}`,
+    "접수는 계약이 아니므로 소진률은 계약률의 <b>상한</b> — 상한과의 거리를 안전 마진으로 봄. 경쟁률은 계약률이 아님"));
+  if (wp != null) rows.push(trow("③ 분양권 웃돈율", `분양가 위에 얹히는 웃돈이 있어야 가격 여유`, `0% — 마이너스면 시장가가 분양가 이하 (${fmt(pr.matched)}건 매칭)`, `${P(wp,1,true)} ${tag(wp >= 0)}`,
+    "분양권이 분양가보다 싸면 수분양자 계약 포기·해제 유인과 잔금 부담이 커지는 신호. 0%를 기준으로 삼은 이유: 분양가와 시장가가 같아지는 경계선"));
+  if (cap) rows.push(trow("④ 잔금 여력 (전세로 잔금 충당)", `잔금 비율 30% <span class="note">(01 Ⅳ 납부조건: 계약금 10 / 중도금 60 / 잔금 30)</span>`,
+    `${P(cap.ratio,1)} — 84㎡ 신규 전세 평균 ${E(cap.avgDeposit/100)} ÷ 세대당 분양가 ${E(our.priceEok*100)} (${fmt(cap.n)}건)`, `${N((cap.ratio - 0.3)*100,1,"%p",true)} ${tag(cap.ratio > 0.3)}`,
+    "입주 시점에 잔금 30%를 전세보증금으로 메울 수 있으면 입주 단계 잔금 미납 위험이 낮음. 기준 = 계약서상 잔금 비율"));
+  rows.push(trow("⑤ 미분양담보대출 한도 vs 미분양 규모", `약정 한도 ${E(loan)} (01 Ⅲ-1)`,
+    `${E(unsold)} — 적용 분양률 ${Math.round(RATE*100)}%의 미분양 분양가`, `${P(unsold ? (loan - unsold)/unsold : null,1,true)} ${tag(loan >= unsold)}`,
+    "미분양을 담보대출로 받아낼 수 있는 한도와 비교. 기준 = 약정서에 확정된 한도(그 이상은 근거 없음). 담보인정 비율은 자료에 없어 분양가 전액을 담보로 가정"));
+  const body = `<p class="note" style="margin:0 0 8px">각 신호의 <b>비교 기준</b>과 <b>그 기준을 정한 근거</b>를 적습니다. 조회일 ${date}. 청라(서해구) 기준.</p>` +
+    tbl(["신호","우리 값","비교 기준 (조회일 "+date+")","여유","기준을 정한 근거"], rows) +
+    `<div class="conc"><b>해석</b> — 가격은 여유, 분양률은 얇습니다. ` +
+    (lowest ? `상환 한계 평당가(${MM(limAtRate)}만원)는 인근 민간 최저 단지(${MM(lowest.avg)}만원)보다 ${MM(lowest.avg - limAtRate)}만원(${P((lowest.avg - limAtRate)/lowest.avg,1)}) 낮아 <b>가격 면에서는 시장가 수준이면 상환 가능</b>하지만, ` : "") +
+    `인근 분양권은 분양가 아래(${wp != null ? P(wp,1,true) : "-"})에서 거래되어 분양가를 올릴 여지가 없습니다. 분양률은 한계 ${P(lim.repay.rateAtPlan,1)}에 대해 청약 단계 상한이 ${burn != null ? P(burn,1) : "-"}로 여유가 ${burn != null ? N((burn - lim.repay.rateAtPlan)*100,1,"%p") : "-"}에 그치며, 이 상한은 계약률이 아닙니다. 미분양을 대출로 받아도 한도가 부족합니다. 이 사업의 안전판은 가격이 아니라 <b>분양률·미분양 대응 재원</b>입니다.</div>`;
+  return ch(0, "시장 대비 여유 해석", body);
+}
+
+/* 6장 리스크와 완화 방안 — 청라: 리스크 3가지 (근거 숫자 · 현실화 조건 · 완화 방안) */
+function chRisks(input){
+  if (!hasRevenue(input)) return ch(0, "리스크와 완화 방안", NODATA);
+  const lim = Calc.limits(input), cash = Calc.endCash(input, RATE), per1 = Calc.cashSlope(input) / 100;
+  const payable = Math.max(0, input.sub + cash);
+  const unsold = (1 - RATE) * Calc.salesRevenue(input, 1);
+  const B = Cheongna.BUILDER, c = B.contract;
+  const monthlyInt = (105000 * 0.065 + 25000 * 0.085) / 12 / 100;     // 억/월 (Tr-A·Tr-B 이자)
+  const daily = c.price * c.delayRate / 100, cap = c.price * c.delayCapRate / 100;
+  const risk = (t, basis, cond, mitig) => `<div class="risk"><h3>${t}</h3><p><span class="lbl">근거 숫자</span>${basis}</p><p><span class="lbl">현실화 조건</span>${cond}</p><p><span class="lbl">완화 방안</span>${mitig}</p></div>`;
+  return ch(0, "리스크와 완화 방안",
+    `<p class="note" style="margin:0">적용 평당가 ${MM(input.price)}만원 · 적용 분양률 ${Math.round(RATE*100)}% 기준. 금액 억원.</p>` +
+    risk("① 분양률 — 한계선과의 거리가 짧다",
+      `상환 한계 분양률 ${P(lim.repay.rateAtPlan,1)}, 적용 ${Math.round(RATE*100)}% → 여유 ${N((RATE - lim.repay.rateAtPlan)*100,1,"%p")}. 분양률 1%p당 기말현금 ${E(per1)}. 적용 분양률의 기말현금 ${E(cash)} (상환 한계 ${E(-input.sub)}), 기말현금 0은 분양률 ${P(lim.zero.rateAtPlan,1)} 필요 → <b>적용 분양률에서는 기말현금 0에 못 미치고 후순위가 줄어든 채 끝납니다.</b>`,
+      `인근 청약 단계 소진률은 계약률 상한일 뿐이고 분양권은 분양가 아래 거래, 고가 주택형(청라 아크원 103㎡)은 이미 미달(잔여 51/99세대). 분양 개시(2027-04)까지 금리·입주물량·청약 규제가 바뀌면 한계선(${P(lim.repay.rateAtPlan,1)}) 아래로 내려갈 수 있음.`,
+      `착공 전 분양률·본PF Tr-B 인출을 계약률 게이트와 연동, 분양조건 완화(계약금·중도금) 사전 설계, 주택형 믹스 조정, 분양가 인하 한도(${MM(Calc.breakEvenPrice(input, RATE, -input.sub))}만원 = 한계) 사전 합의.`) +
+    risk("② 후순위 구조 — 유보금이 먼저 깎인다",
+      `후순위 ${E(input.sub)}(유보금 420억 + 시행사 대여금 60억) 중 적용 분양률에서 지급 가능한 금액은 <b>${E(payable)}</b> (${P(input.sub ? payable/input.sub : null,0)}) → 미지급 ${E(Math.max(0, -cash))}. 07 제9조④ 유보금 부족분은 '별도 협의'. 미분양 ${E(unsold)}은 미분양담보대출 한도 400억을 초과(${P(unsold/400-1,0,true)}).`,
+      `분양률이 ${Math.round(RATE*100)}% 안팎에 머물면 본PF는 갚아도 시공사 유보금·시행사 대여금 일부가 준공 후에도 지급되지 않음 → 시공사 현금 회수 지연이 시공사 신용(아래)과 만나 책임준공 이행력에 영향.`,
+      `유보금 지급 순서·최종기한을 제9조④에서 '별도 협의'가 아니라 확정 조항으로 변경, 시행사 추가 출자 약정, 미분양담보대출 한도 상향 또는 미분양 매입 구조(제18조 매입확약 부재) 협의.`) +
+    risk("③ 시공사 신용 — 책임준공 확약의 이행 능력",
+      `대주건설 2025년 영업손실 −180억·순손실 −294억, 부채비율 268%, 현금 480억 vs 총차입금 5,310억, PF 보증 4,200억(자기자본의 110.2%), 책임준공 확약 23개 현장 동시, 회사채 BBB0 하향 검토. 우리 도급 1,890억 = 시공사 매출의 21.6%·자본의 49.6%.`,
+      `등급 하락 → 워크아웃·회생 시 제12조③ 해지 가능하나 대체 시공사 선정 기간 공사 중단. 공기 지연 시 본PF 이자만 월 약 ${MM(monthlyInt,1)}억, 지체상금은 일 ${MM(daily,2)}억(상한 ${MM(cap)}억 = 약 200일분)이며 제12조② 6개월 유예 후에야 손해배상 청구.`,
+      `책임준공 신용보강(연대보증·책임준공 보증보험·사전 지명 대체 시공사), 공정률 연동 기성 지급과 공사비 에스크로, 시공사 등급 하락·차입금 비율을 트리거로 한 기성 지급 중단·직접지급 조항.`));
+}
+
+/* 시공사 신용과 책임준공 실효성 — 06 · 07 */
+function chBuilder(){
+  const B = Cheongna.BUILDER, y = B.y2025, c = B.contract;
+  const daily = c.price * c.delayRate, cap = c.price * c.delayCapRate;
+  const rows = [
+    trow("2025 영업이익 / 당기순이익", `<span class="neg">${MM(y.op)} / ${MM(y.net)}</span> 백만원 (2023 +31,200 → 2024 +20,500 → 적자 전환)`, "책임준공 이행의 원천인 이익이 적자로 돌아섬"),
+    trow("부채비율 / 차입금의존도", `${y.debtRatio}% / 37.9% (2023 187.2% / 30.1%)`, "2년 사이 부채비율 +80.8%p"),
+    trow("현금성자산 vs 총차입금", `${MM(y.cash)} vs ${MM(y.debt)} 백만원 (현금은 차입금의 ${(y.cash/y.debt*100).toFixed(1)}%, 2023 ${(92000/386000*100).toFixed(1)}%)`, "단기 유동성 완충이 얇음"),
+    trow("PF 지급보증 / 책임준공 현장", `${MM(B.pfGuarantee)} 백만원 = 자기자본의 ${B.pfRatioPct}% / ${B.completionSites}개 현장`, "보증 한 건이 터지면 자본을 초과 — 동시 다발 준공 부담"),
+    trow("신용등급", B.rating, "하향 검토는 책임준공·연대보증의 실효성을 가장 직접적으로 흔드는 신호"),
+    trow("우리 현장의 크기", `도급 ${MM(c.price)} 백만원 = 2025 매출의 ${(c.price/y.sales*100).toFixed(1)}% · 자본의 ${(c.price/y.equity*100).toFixed(1)}%`, "시공사에게 가볍지 않은 규모"),
+  ];
+  const ct = [
+    trow("제12조① 책임준공 확약", "확약만 있고 <b>보증서·연대보증·보증보험 등 신용보강이 계약 발췌에 없음</b>", "이행 능력이 아니라 의사의 확인"),
+    trow("제12조② 도과 후 6개월 유예", `기한 도과 후 6개월 안 완공이면 면책 — 이 기간 본PF 이자 월 약 ${MM((105000*0.065+25000*0.085)/12,0)}백만원 × 6 ≈ ${MM((105000*0.065+25000*0.085)/2,0)}백만원은 시행사 부담`, "지연 비용은 시행사에 먼저 쌓임"),
+    trow("제12조③ 해지·대체 시공사", "회생·워크아웃·당좌거래정지 시 해지 가능", "사후 대응일 뿐 — 대체 선정까지 공사 중단·공사비 상승"),
+    trow("제15조 지체상금", `일 ${MM(daily,1)} 백만원(도급금액의 0.05%), 총액 상한 ${MM(cap)} 백만원 = 도급의 10% (약 ${MM(cap/daily)}일분)`, "받을 돈의 신용이 곧 시공사 신용"),
+    trow("제9조 유보금", `${MM(c.retention)} 백만원 후순위. ④ 재원 부족 시 지급시기 별도 협의`, "시공사 입장에서 현금 회수가 늦어질수록 자금난 악화"),
+    trow("제18조 미분양", "미분양 매입확약 없음 — 처리방안 '협의'", "미분양은 시행사·대주단 몫"),
+  ];
+  return ch(0, "시공사 신용과 책임준공 실효성",
+    `<p class="note" style="margin:0 0 8px">원자료 06(DART 발췌 형식 합성 데이터) · 07 도급계약서 발췌. 금액 백만원.</p>` +
+    `<div class="sub-h">06 시공사 재무</div>${tbl(["지표","값","의미"], rows)}` +
+    `<div class="sub-h">07 도급계약 조항</div>${tbl(["조항","내용","판단"], ct)}` +
+    `<div class="conc"><b>의견</b> — 대주건설은 <b>의사는 있으나 능력은 약해진 시공사</b>입니다. 책임준공 확약이 있다는 것과 이행할 능력이 있다는 것은 다른 문제입니다. 영업적자·부채비율 268%·현금 480억 대 차입금 5,310억·PF 보증 4,200억·BBB0 하향 검토가 동시에 있고, 계약에는 신용보강이 없습니다. 지체상금 상한(${MM(cap)}백만원)은 본PF(130,000백만원)의 ${(cap/130000*100).toFixed(1)}%에 불과해 <b>확약의 실질 담보는 시공사 신용 자체</b>입니다. 그래서 책임준공 확약은 '있음'이 아니라 <b>신용보강이 붙을 때만</b> 유효한 것으로 보고, 아래 추진 조건에 넣었습니다.</div>`);
+}
+
+/* 이 사업을 추진하려면 충족돼야 할 조건 */
+function chConditions(input){
+  if (!hasRevenue(input)) return ch(0, "추진 조건", NODATA);
+  const lim = Calc.limits(input);
+  const items = [
+    `<b>책임준공 신용보강</b> — 연대보증 또는 책임준공 보증보험, 사전 지명 대체 시공사(스텝인), 공정률 연동 기성 지급과 공사비 에스크로. 시공사 등급이 BBB- 이하로 내려가거나 차입금 비율이 일정선을 넘으면 기성 직접지급·공사 이관을 자동 발동.`,
+    `<b>분양률 게이트</b> — 본PF 인출·착공 조건에 분양 개시 후 계약률 하한을 연동. 하한은 상환 한계 분양률(${P(lim.repay.rateAtPlan,1)})에 안전마진을 더한 수준으로 정하고, 못 미치면 분양가·조건 재설계 또는 사업 조정.`,
+    `<b>유보금·후순위 확정</b> — 제9조④ '별도 협의'를 지급 순서·최종기한이 정해진 조항으로 바꾸고, 부족분은 시행사 추가 출자로 메운다는 약정을 받는다.`,
+    `<b>미분양 재원</b> — 미분양담보대출 한도(400억)가 적용 분양률의 미분양 규모보다 작음. 한도 상향 또는 시공사·제3자 미분양 처리 구조를 합의(제18조에 매입확약 없음).`,
+    `<b>가격 가정 점검</b> — 분양가는 적용값(${MM(input.price)}만원) 이하에서 책정하고, 한계 평당가(${MM(Calc.breakEvenPrice(input, RATE, -input.sub))}만원) 아래로 내려가지 않는 범위에서만 조정. 분양 시점(2027-04) 직전 공공데이터를 다시 받아 분양가·분양률 가정을 갱신.`,
+    `<b>공사비 증액 통제</b> — 제3조 물가변동(지수 3%↑ 조정 협의)로 고정비가 늘어도 기말현금 여유가 ${E(Calc.margins(input, RATE).fixedMargin)}뿐이므로, 증액 한도·예비비(직접공사비 3% = 56.7억) 소진 기준을 계약으로 관리.`,
+  ];
+  return ch(0, "추진 조건", `<p class="note" style="margin:0 0 6px">위 리스크와 시공사 의견을 종합해, 이 사업은 <b>다음 조건이 충족될 때만 추진</b>하는 것을 제안합니다. 지금 초안(확약 + 미분양담보대출 400억 + 합리적 분양가)만으로는 충족되지 않습니다.</p><ol class="todo">${items.map(x => `<li>${x}</li>`).join("")}</ol>`);
+}
+
+/* 검증 로그 — 검증 3종과 보안 점검 */
+function chVerify(){
+  const d = Cheongna.derive(), T = Cheongna.TYPES;
+  const ok = b => `<span class="badge ${b ? "ok" : "no"}">${b ? "일치" : "불일치"}</span>`;
+  const r1 = T.map(t => { const v = t.pyeong * t.hope / 100; return trow(esc(t.name), `${t.pyeong}평 × ${MM(t.hope)}만원 ÷ 100`, N(v,2), `${t.pdf} (사업계획서 Ⅳ)`, ok(Math.round(v) === t.pdf)); });
+  const sum = d.fixed + d.variable + d.offset;
+  const types = T.map(t => ({ name: t.name, sqm: t.sqm, pyeong: t.pyeong, units: t.units }));
+  const inH = { types, price: d.avgHope, retail: d.shop/100, other: d.other/100, fixed: d.fixed/100, pf: d.pf/100, pfCost: d.pfCost/100, sub: d.sub/100 };
+  const app = Calc.endCash(inH, 1) * 100, hand = d.total + d.other - d.fixed - d.school - d.agency;
+  return ch(0, "검증 로그와 보안 점검",
+    `<div class="sub-h">검증 1 — 표본 3셀 (03 세대당 분양가 = 공급면적 × 평당가 ÷ 100, 백만원)</div>${tbl(["타입","산식","계산","원자료","판정"], r1)}` +
+    `<div class="sub-h">검증 2 — 합계 일치</div>${tbl(["식","값","판정"], [
+      trow("고정비 + 변동비 + 상쇄", `${MM(d.fixed)} + ${MM(d.variable,2)} + ${MM(d.offset,2)} = <b>${MM(sum,2)}</b>`, ok(Math.abs(sum - d.totalInvest) < 1e-6)),
+      trow("소요자금 구분별 고정비 소계의 합", `${MM(Cheongna.fixedByGroup().reduce((s, x) => s + x.v, 0),2)} = 고정비 ${MM(d.fixed)}`, ok(Math.abs(Cheongna.fixedByGroup().reduce((s, x) => s + x.v, 0) - d.fixed) < 1e-6)),
+    ])}` +
+    `<div class="sub-h">검증 3 — 역산 (희망 평당가 · 분양률 100%)</div>${tbl(["방법","기말현금 (백만원)","판정"], [
+      trow("소요자금 표로 손계산: 총분양가 + 기타유입 − 고정비 − 변동비 (상쇄는 유입=지출)", `${MM(d.total,2)} + ${MM(d.other)} − ${MM(d.fixed)} − ${MM(d.variable,2)} = <b>${MM(hand,2)}</b>`, ""),
+      trow("앱 계산기 (calc.js endCash)", `<b>${MM(app,2)}</b>`, ok(Math.abs(app - hand) < 0.01)),
+    ])}<p class="note">검증 1~3은 이 화면이 열릴 때마다 다시 계산되고, <code>npm test</code>(cheongna.test.js)가 같은 식을 검사합니다.</p>` +
+    `<div class="sub-h">보안 점검</div><ul class="todo">
+      <li>인증키(DATA_GO_KR_KEY)는 <code>.env.local</code>과 Vercel 환경변수에만 있고, 서버 코드(region.js·rtms.js·applyhome.js·api-handler.js)에서만 호출합니다. 브라우저에 노출되는 공개용 환경변수는 쓰지 않습니다.</li>
+      <li>브라우저는 지역 이름만 보내고, 법정동코드는 서버가 매번 다시 확인합니다. 공공데이터 호출은 하루 캐시입니다.</li>
+      <li>빌드(<code>npm run build</code>)는 API를 부르지 않고 키 없이 통과하며, 산출물에 인증키 값·공공데이터 주소·서비스키 파라미터 문자열이 있으면 실패하도록 점검합니다.</li>
+      <li>인증키 문자열 검색(소스·산출물·이 화면의 HTML): <b>0건</b> — 실행 방법: <code>npm run scan</code></li>
+    </ul>`);
+}
+
+/* ───── 전체 렌더링 ───── */
+function render(){
+  const rv = num("rate"); RATE = rv > 0 && rv <= 100 ? rv / 100 : 1;
+  const input = readInput();
+  const name = $("name").value.trim(), site = $("site").value.trim();
+  $("docTitle").textContent = name ? `${name} 사업계획서` : "사업계획서";
+  $("docMeta").textContent = site ? `사업대상지 ${site}` : "";
+  const cn = isCheongna();
+  const html1 = ch1(input).replace(/<\/section>$/, regionNote() + "</section>");
+  const parts = cn
+    ? [html1, chInputs(), ch2(input), chBasis(input), ch3(input), ch4(input), ch5(input), chSignals(input), chRisks(input), chBuilder(), chConditions(input), chVerify(), ch7()]
+    : [html1, ch2(input), ch3(input), ch4(input), ch5(input), ch6(input), ch7()];
+  let n = 0;
+  $("report").innerHTML = parts.join("").replace(/<span class="no">\d+<\/span>/g, () => `<span class="no">${++n}</span>`);
+}
+
+document.querySelectorAll("[data-p]").forEach(b => b.onclick = () => fill(b.dataset.p));
+$("addRow").onclick = () => addRow();
+$("clearAll").onclick = clearAll;
+$("printBtn").onclick = () => window.print();
+$("f").addEventListener("input", totals);
+$("site").addEventListener("input", scheduleRegion);
+
+/* 보고서 안의 버튼(불러오기 · 다시 시도 · 후보 선택) */
+$("report").addEventListener("click", e => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  const run = MK.run;
+  if (b.id === "loadMarket") return startRun();
+  if (b.dataset.cand) { $("site").value = b.dataset.cand; return checkRegion(); }
+  if (!run || !b.dataset.retry) return;
+  const [what, a, c] = b.dataset.retry.split("|");
+  if (what === "silv" || what === "rent") loadMonth(run, what, a);
+  else if (what === "list") loadApply(run);
+  else if (what === "cx") { const x = run.cx[a + "|" + c]; if (x) loadComplex(run, x.info); }
+});
+AUTO_RUN = true; fill("Z"); // 처음 열면 청라 레이크포레 입력값이 들어간 상태
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "pf-business-plan",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node local-server.js",
+    "test": "node --test",
+    "build": "node build.js",
+    "scan": "node scan-key.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
